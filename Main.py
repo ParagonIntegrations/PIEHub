@@ -74,7 +74,7 @@ class SerialComm(multiprocessing.Process):
 
         while True:
 
-            self.data = ser.readline()
+            self.data = ser.readline().strip()
             print(self.data)
 
             # Get information from Queue
