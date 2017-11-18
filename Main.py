@@ -86,6 +86,8 @@ class SerialComm(multiprocessing.Process):
                 print (json.dumps(decodeddict, indent=1, sort_keys=True))
                 self.outputqueue.put(decodeddict)
 
+            Unit = decodeddict["ID"]
+            print(Unit)
 
 
             # Check inputqueue for new information
