@@ -102,8 +102,8 @@ class HubManager(multiprocessing.Process):
         # Start subprocesses
         #Start Serial Reader
         self.Processdata['SerialComm'] = {}
-        self.Processdata['SerialComm']['inputqueue'] = multiprocessing.Queue
-        self.Processdata['SerialComm']['outputqueue'] = multiprocessing.Queue
+        self.Processdata['SerialComm']['inputqueue'] = multiprocessing.Queue()
+        self.Processdata['SerialComm']['outputqueue'] = multiprocessing.Queue()
         SerialComm(self.Processdata['SerialComm']['inputqueue'],self.Processdata['SerialComm']['outputqueue']).start()
         print('Serial Comm Started')
         # Main Loop
