@@ -80,13 +80,15 @@ class SerialComm(multiprocessing.Process):
             decodeddata = self.data.decode()
 
             if decodeddata != "":
-                printjson = json.loads(decodeddata)
+                decodeddict = json.loads(decodeddata)
                 print('Json')
                 print("")
-                print (json.dumps(printjson, indent=1, sort_keys=True))
+                print (json.dumps(decodeddict, indent=1, sort_keys=True))
+                self.outputqueue.put(decodeddict)
 
 
-            # Get information from Queue
+
+            # Check inputqueue for new information
             try:
                 while True:
                     updated_variables = self.inputqueue.get_nowait()
@@ -104,6 +106,8 @@ class HubManager(multiprocessing.Process):
 
         # Initialize variables
         self.Processdata = {}
+        self.serialdata = {}
+        self.EnergyData = {}
 
 
     def run(self):
@@ -119,8 +123,15 @@ class HubManager(multiprocessing.Process):
         while True:
 
             # Check for new data from PIEmon
+            try:
+                while True:
+                    self.serialdata = self.Processdata['SerialComm']['outputqueue'].get_nowait()
+            except queue.Empty:
+                pass
 
             # Update Energy variables
+            Unit = self.serialdata['ID']
+            print(Unit)
 
             # Send data to Database
 
