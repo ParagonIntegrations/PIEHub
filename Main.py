@@ -68,6 +68,7 @@ class SerialComm(multiprocessing.Process):
     def run(self):
         # Initialize serial connection
         ser = serial.Serial(port="/dev/ttyAMA0",baudrate=9600,timeout=2)
+        ser.close()
         ser.open()
 
 
@@ -83,6 +84,7 @@ class SerialComm(multiprocessing.Process):
                     ser.write(updated_variables)
             except queue.Empty:
                 pass
+
 
 
 # Main Manager class
