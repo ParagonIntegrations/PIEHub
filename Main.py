@@ -5,6 +5,7 @@ import queue
 import time
 import sqlite3
 import serial
+import json
 
 
 # Class for writing to Database
@@ -76,6 +77,11 @@ class SerialComm(multiprocessing.Process):
 
             self.data = ser.readline().strip()
             print(self.data)
+            printjson = json.loads(self.data)
+            print('Json')
+            print("")
+            print(printjson)
+
 
             # Get information from Queue
             try:
