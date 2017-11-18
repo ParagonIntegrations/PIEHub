@@ -76,14 +76,14 @@ class SerialComm(multiprocessing.Process):
         while True:
 
             self.data = ser.readline().strip()
-            print(self.data)
+            #print(self.data)
             decodeddata = self.data.decode()
 
             if decodeddata != "":
                 printjson = json.loads(decodeddata)
                 print('Json')
                 print("")
-                print(printjson)
+                print (json.dumps(printjson, indent=1, sort_keys=True))
 
 
             # Get information from Queue
