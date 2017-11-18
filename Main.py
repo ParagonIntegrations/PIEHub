@@ -77,7 +77,9 @@ class SerialComm(multiprocessing.Process):
 
             self.data = ser.readline().strip()
             print(self.data)
-            printjson = json.loads(self.data.decode())
+            printjson = self.data.decode()
+
+
             print('Json')
             print("")
             print(printjson)
