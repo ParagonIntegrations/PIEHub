@@ -130,7 +130,7 @@ class HubManager(multiprocessing.Process):
                 pass
 
             # Update Energy variables
-            Unit = self.serialdata['ID']
+            Unit = self.serialdata["ID"]
             print(Unit)
 
             # Send data to Database
