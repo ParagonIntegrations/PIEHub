@@ -86,10 +86,6 @@ class SerialComm(multiprocessing.Process):
                 print (json.dumps(decodeddict, indent=1, sort_keys=True))
                 self.outputqueue.put(decodeddict)
 
-            Unit = decodeddict["ID"]
-            print(Unit)
-
-
             # Check inputqueue for new information
             try:
                 while True:
@@ -108,7 +104,21 @@ class HubManager(multiprocessing.Process):
 
         # Initialize variables
         self.Processdata = {}
-        self.serialdata = {}
+        self.serialdata = {
+            'ID': 0,
+            'Channel1': {
+                'Units': 0,
+                'UnitsUsed': 0
+            },
+            'Channel2': {
+                'Units': 0,
+                'UnitsUsed': 0
+            },
+            'Channel3': {
+                'Units': 0,
+                'UnitsUsed': 0
+            }
+        }
         self.EnergyData = {}
 
 
@@ -132,8 +142,28 @@ class HubManager(multiprocessing.Process):
                 pass
 
             # Update Energy variables
-            #Unit = self.serialdata["ID"]
-            #print(Unit)
+            UnitID = self.serialdata['ID']
+            print(UnitID)
+            """
+            if UnitID not in self.EnergyData.keys():
+                self.EnergyData[UnitID] = {
+                    'Channel1': {
+                        'Units': 0,
+                        'UnitsUsed': 0
+                    },
+                    'Channel2': {
+                        'Units': 0,
+                        'UnitsUsed': 0
+                    },
+                    'Channel3': {
+                        'Units': 0,
+                        'UnitsUsed': 0
+                    }
+                }
+            else:
+                self.EnergyData[UnitID]['UnitsUsed'] = self.serialdata['Channel1']['UnitsUsed']
+            """
+
 
             # Send data to Database
 
