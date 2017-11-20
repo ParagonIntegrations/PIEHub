@@ -50,7 +50,7 @@ class WriteToDatabase(multiprocessing.Process):
                 pass
 
             # Check length of list to write
-            if len(self.databaselist) > 50:
+            if len(self.databaselist) > 5:
                 self.write_to_database()
 
             time.sleep(2)
