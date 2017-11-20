@@ -24,7 +24,7 @@ class WriteToDatabase(multiprocessing.Process):
         self.lastsleeptime = 0
 
     def write_to_database(self):
-        conn = sqlite3.connect('Log.db')
+        conn = sqlite3.connect('PIEHub.db')
         try:
             with conn:
                 conn.executemany('INSERT INTO EnergyLog(DateTime, ID, Frequency, PLL, V1, I1,'
