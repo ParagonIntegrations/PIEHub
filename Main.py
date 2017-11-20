@@ -88,7 +88,7 @@ class SerialComm(multiprocessing.Process):
                     decodeddict['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     #print('Json')
                     #print("")
-                    print (json.dumps(decodeddict, indent=1, sort_keys=True))
+                    #print (json.dumps(decodeddict, indent=1, sort_keys=True))
                     self.outputqueue.put(decodeddict)
                 except Exception:
                     print("Exception ignored in decoding json data - SerialComm")
