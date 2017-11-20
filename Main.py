@@ -10,7 +10,7 @@ import json
 
 
 # Class for writing to Database
-class WriteToDatabase(multiprocessing.Process):
+class DBServ(multiprocessing.Process):
 
     def __init__(self, inputqueue, outputqueue):
         multiprocessing.Process.__init__(self)
@@ -33,12 +33,23 @@ class WriteToDatabase(multiprocessing.Process):
                                  ' VALUES (:DateTime, :ID, :Frequency, :PLL, :V1, :I1,'
                                  ' :PowerFactor1, :PImport1, :PExport1, :UnitsUsed1, :Units1)',
                                  self.databaselist)
-            print('Data written to database - WriteToDatabase')
+            print('Data written to database - DBServ')
         except sqlite3.Error:
-            print("sqlite3 error - WriteToDatabase")
+            print("sqlite3 error - DBServ")
         self.databaselist = []
 
     def run(self):
+
+        # Load values from DB for initial dictionary population
+        conn = sqlite3.connect('PIEHub.db')
+        try:
+            with conn:
+                conn.execute('SELECT DISTINCT ID FROM EnergyLog')
+                dbids = conn.cursor().fetchall()
+                print("Retrieved dbids")
+                self.outputqueue.put(dbids)
+        except sqlite3.Error:
+            print("sqlite3 error when loading database - DBServ")
 
         while True:
 
@@ -124,7 +135,7 @@ class HubManager(multiprocessing.Process):
     def run(self):
 
         # Start subprocesses
-        #Start Serial Reader
+        # Start Serial Reader
         self.Processdata['SerialComm'] = {}
         self.Processdata['SerialComm']['inputqueue'] = multiprocessing.Queue()
         self.Processdata['SerialComm']['outputqueue'] = multiprocessing.Queue()
@@ -135,7 +146,7 @@ class HubManager(multiprocessing.Process):
         self.Processdata['DBServ'] = {}
         self.Processdata['DBServ']['inputqueue'] = multiprocessing.Queue()
         self.Processdata['DBServ']['outputqueue'] = multiprocessing.Queue()
-        WriteToDatabase(self.Processdata['DBServ']['inputqueue'], self.Processdata['DBServ']['outputqueue']).start()
+        DBServ(self.Processdata['DBServ']['inputqueue'], self.Processdata['DBServ']['outputqueue']).start()
         print('DB Server started - PIEHub')
 
         # Main Loop
