@@ -33,7 +33,7 @@ class WriteToDatabase(multiprocessing.Process):
                                  ' :PowerFactor1, :PImport1, :PExport1, :UnitsUsed1, :Units1)',
                                  self.databaselist)
         except sqlite3.Error:
-            pass
+            print("sqlite3 error - WriteToDatabase")
         self.databaselist = []
 
     def run(self):
@@ -45,6 +45,7 @@ class WriteToDatabase(multiprocessing.Process):
                 while True:
                     updated_variables = self.inputqueue.get_nowait()
                     self.databaselist.append(updated_variables)
+                    print("Data received")
             except queue.Empty:
                 pass
 
@@ -85,8 +86,8 @@ class SerialComm(multiprocessing.Process):
                 try:
                     decodeddict = json.loads(decodeddata)
                     decodeddict['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    print('Json')
-                    print("")
+                    #print('Json')
+                    #print("")
                     print (json.dumps(decodeddict, indent=1, sort_keys=True))
                     self.outputqueue.put(decodeddict)
                 except Exception:
@@ -189,7 +190,7 @@ class HubManager(multiprocessing.Process):
 
             # Send data to Database
             self.Processdata['DBServ']['inputqueue'].put(self.serialdata)
-
+            print("Data sent to DB - Hub Manager")
 
             # Send updated information to PIEmon every 60 mins
 
