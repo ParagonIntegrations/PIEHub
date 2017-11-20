@@ -27,9 +27,10 @@ class WriteToDatabase(multiprocessing.Process):
         conn = sqlite3.connect('Log.db')
         try:
             with conn:
-                conn.executemany('INSERT INTO DataLog(DateTime, ProcessName, Temperature, Duty, Setpoint,'
-                                 'SafetyTemp, SafetyTrigger, Status) VALUES (:DateTime, :ProcessName,'
-                                 ':Temperature, :Duty, :Setpoint, :SafetyTemp, :SafetyTrigger, :Status)',
+                conn.executemany('INSERT INTO EnergyLog(DateTime, ID, Frequency, PLL, V1, I1,'
+                                 ' PowerFactor1, PImport1, PExport1, UnitsUsed1, Units1)'
+                                 ' VALUES (:DateTime, :ID, :Frequency, :PLL, :V1, :I1,'
+                                 ' :PowerFactor1, :PImport1, :PExport1, :UnitsUsed1, :Units1)',
                                  self.databaselist)
         except sqlite3.Error:
             pass
