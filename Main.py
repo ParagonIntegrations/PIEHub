@@ -162,18 +162,8 @@ class HubManager(multiprocessing.Process):
 
             if UnitID not in self.EnergyData.keys():
                 self.EnergyData[UnitID] = {
-                    'Channel1': {
-                        'Units': 0,
-                        'UnitsUsed': 0
-                    },
-                    'Channel2': {
-                        'Units': 0,
-                        'UnitsUsed': 0
-                    },
-                    'Channel3': {
-                        'Units': 0,
-                        'UnitsUsed': 0
-                    }
+                        'Units1': 0,
+                        'UnitsUsed1': 0
                 }
             else:
                 self.EnergyData[UnitID]['UnitsUsed1'] = self.serialdata['UnitsUsed1']
