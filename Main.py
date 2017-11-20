@@ -113,18 +113,8 @@ class HubManager(multiprocessing.Process):
         self.Processdata = {}
         self.serialdata = {
             'ID': 0,
-            'Channel1': {
-                'Units': 0,
-                'UnitsUsed': 0
-            },
-            'Channel2': {
-                'Units': 0,
-                'UnitsUsed': 0
-            },
-            'Channel3': {
-                'Units': 0,
-                'UnitsUsed': 0
-            }
+            'Units1': 0,
+            'UnitsUsed1': 0
         }
         self.EnergyData = {}
 
