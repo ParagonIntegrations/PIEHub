@@ -46,8 +46,21 @@ class DBServ(multiprocessing.Process):
             with conn:
                 conn.execute('SELECT DISTINCT ID FROM EnergyLog')
                 dbids = conn.cursor().fetchall()
+
+                idandunits = {}
+                for meterid in dbids:
+                    conn.execute('SELECT Units1 FROM EnergyLog ORDER BY DateTime DESC LIMIT 1 AND ID=:id', {'id': meterid,})
+                    idandunits = {
+                        meterid :{
+                            'Units1': conn.cursor().fetchone()
+                        }
+                    }
+                    #repeat for units2 and units3
+
+
                 print("Retrieved dbids")
-                self.outputqueue.put(dbids)
+                self.outputqueue.put(idandunits)
+
         except sqlite3.Error:
             print("sqlite3 error when loading database - DBServ")
 
@@ -127,7 +140,6 @@ class HubManager(multiprocessing.Process):
         self.serialdata = {
             'ID': 0,
             'Units1': 0,
-            'UnitsUsed1': 0
         }
         self.EnergyData = {}
 
@@ -149,6 +161,8 @@ class HubManager(multiprocessing.Process):
         DBServ(self.Processdata['DBServ']['inputqueue'], self.Processdata['DBServ']['outputqueue']).start()
         print('DB Server started - PIEHub')
 
+        self.EnergyData = self.Processdata['DBServ']['outputqueue'].get(timeout=10)
+
         # Main Loop
         while True:
 
@@ -165,12 +179,10 @@ class HubManager(multiprocessing.Process):
 
             if UnitID not in self.EnergyData.keys():
                 self.EnergyData[UnitID] = {
-                        'Units1': 0,
-                        'UnitsUsed1': 0
+                        'Units1': self.serialdata['Units1'],
                 }
             else:
-                self.EnergyData[UnitID]['UnitsUsed1'] = self.serialdata['UnitsUsed1']
-                self.EnergyData[UnitID]['Units1'] -= self.serialdata['Units1']
+                self.EnergyData[UnitID]['Units1'] -= self.serialdata['UnitsUsed1']
                 # Check if Units match
 
             # Send data to Database
