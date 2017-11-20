@@ -45,7 +45,7 @@ class WriteToDatabase(multiprocessing.Process):
                 while True:
                     updated_variables = self.inputqueue.get_nowait()
                     self.databaselist.append(updated_variables)
-                    print("Data received")
+                    print("Data received - WriteTODatabase")
             except queue.Empty:
                 pass
 
@@ -176,17 +176,9 @@ class HubManager(multiprocessing.Process):
                     }
                 }
             else:
-                self.EnergyData[UnitID]['Channel1']['UnitsUsed'] = self.serialdata['Channel1']['UnitsUsed']
-                self.EnergyData[UnitID]['Channel1']['Units'] -= self.serialdata['Channel1']['UnitsUsed']
+                self.EnergyData[UnitID]['UnitsUsed1'] = self.serialdata['UnitsUsed1']
+                self.EnergyData[UnitID]['Units1'] -= self.serialdata['Units1']
                 # Check if Units match
-                self.EnergyData[UnitID]['Channel2']['UnitsUsed'] = self.serialdata['Channel2']['UnitsUsed']
-                self.EnergyData[UnitID]['Channel2']['Units'] -= self.serialdata['Channel2']['UnitsUsed']
-                # Check if Units match
-                self.EnergyData[UnitID]['Channel3']['UnitsUsed'] = self.serialdata['Channel3']['UnitsUsed']
-                self.EnergyData[UnitID]['Channel3']['Units'] -= self.serialdata['Channel3']['UnitsUsed']
-                # Check if Units match
-
-
 
             # Send data to Database
             self.Processdata['DBServ']['inputqueue'].put(self.serialdata)
