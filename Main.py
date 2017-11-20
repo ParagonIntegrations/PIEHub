@@ -32,6 +32,7 @@ class WriteToDatabase(multiprocessing.Process):
                                  ' VALUES (:DateTime, :ID, :Frequency, :PLL, :V1, :I1,'
                                  ' :PowerFactor1, :PImport1, :PExport1, :UnitsUsed1, :Units1)',
                                  self.databaselist)
+            print('Data written to database - WriteToDatabase')
         except sqlite3.Error:
             print("sqlite3 error - WriteToDatabase")
         self.databaselist = []
