@@ -24,6 +24,7 @@ class WriteToDatabase(multiprocessing.Process):
         self.lastsleeptime = 0
 
     def write_to_database(self):
+        print(self.databaselist)
         conn = sqlite3.connect('PIEHub.db')
         try:
             with conn:
