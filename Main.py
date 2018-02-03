@@ -171,24 +171,24 @@ class HubManager(multiprocessing.Process):
             try:
                 while True:
                     self.serialdata = self.Processdata['SerialComm']['outputqueue'].get_nowait()
+
+                    # Update Energy variables
+                    UnitID = self.serialdata['ID']
+                    print(UnitID)
+
+                    if UnitID not in self.EnergyData.keys():
+                        self.EnergyData[UnitID] = {
+                            'Units1': self.serialdata['Units1'],
+                        }
+                    else:
+                        self.EnergyData[UnitID]['Units1'] -= self.serialdata['UnitsUsed1']
+                        # Check if Units match
+
+                    # Send data to Database
+                    self.Processdata['DBServ']['inputqueue'].put(self.serialdata)
+                    print("Data sent to DB - Hub Manager")
             except queue.Empty:
                 pass
-
-            # Update Energy variables
-            UnitID = self.serialdata['ID']
-            print(UnitID)
-
-            if UnitID not in self.EnergyData.keys():
-                self.EnergyData[UnitID] = {
-                        'Units1': self.serialdata['Units1'],
-                }
-            else:
-                self.EnergyData[UnitID]['Units1'] -= self.serialdata['UnitsUsed1']
-                # Check if Units match
-
-            # Send data to Database
-            self.Processdata['DBServ']['inputqueue'].put(self.serialdata)
-            print("Data sent to DB - Hub Manager")
 
             # Send updated information to PIEmon every 60 mins
 
