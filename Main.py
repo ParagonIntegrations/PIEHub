@@ -62,8 +62,9 @@ class DBServ(multiprocessing.Process):
                 print("Retrieved dbids")
                 self.outputqueue.put(idandunits)
 
-        except sqlite3.Error:
-            print("sqlite3 error when loading database - DBServ")
+        except sqlite3.Error as e:
+            # print("sqlite3 error when loading database - DBServ")
+            print("An error occurred:", e.args[0])
 
         while True:
 
