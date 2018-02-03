@@ -34,8 +34,9 @@ class DBServ(multiprocessing.Process):
                                  ' :PowerFactor1, :PImport1, :PExport1, :UnitsUsed1, :Units1)',
                                  self.databaselist)
             print('Data written to database - DBServ')
-        except sqlite3.Error:
-            print("sqlite3 error - DBServ")
+        except sqlite3.Error as e:
+            # print("sqlite3 error - DBServ")
+            print("An error occurred:", e.args[0])
         self.databaselist = []
 
     def run(self):
