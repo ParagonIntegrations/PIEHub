@@ -202,6 +202,7 @@ class HubManager(multiprocessing.Process):
             time.sleep(1)
 
 if __name__ == "__main__":
+    print("Waiting 30 seconds before starting")
     time.sleep(30)
     hubman = HubManager()
     hubman.start()
