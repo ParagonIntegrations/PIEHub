@@ -7,6 +7,7 @@ import time
 import sqlite3
 import serial
 import json
+import os
 
 
 # Class for writing to Database
@@ -23,9 +24,12 @@ class DBServ(multiprocessing.Process):
         self.databaselist = []
         self.lastsleeptime = 0
 
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.db_path = os.path.join(base_dir, "PIEHub.db")
+
     def write_to_database(self):
         print(self.databaselist)
-        conn = sqlite3.connect('PIEHub.db')
+        conn = sqlite3.connect(self.db_path)
         try:
             with conn:
                 conn.executemany('INSERT INTO EnergyLog(DateTime, ID, Frequency, PLL, V1, I1,'
@@ -42,7 +46,7 @@ class DBServ(multiprocessing.Process):
     def run(self):
 
         # Load values from DB for initial dictionary population
-        conn = sqlite3.connect('PIEHub.db')
+        conn = sqlite3.connect(self.db_path)
         try:
             with conn:
                 conn.execute('SELECT DISTINCT ID FROM EnergyLog')
