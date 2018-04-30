@@ -103,7 +103,7 @@ class SerialComm(multiprocessing.Process):
 
     def run(self):
         # Initialize serial connection
-        ser = serial.Serial(port="/dev/ttyAMA0",baudrate=9600,timeout=10)
+        ser = serial.Serial(port="/dev/ttyAMA0",baudrate=500000,timeout=10)
         ser.close()
         ser.open()
 
