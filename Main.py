@@ -32,10 +32,8 @@ class DBServ(multiprocessing.Process):
         conn = sqlite3.connect(self.db_path)
         try:
             with conn:
-                conn.executemany('INSERT INTO EnergyLog(DateTime, ID, Frequency, PLL, V1, I1,'
-                                 ' PowerFactor1, PImport1, PExport1, UnitsUsed1, Units1)'
-                                 ' VALUES (:DateTime, :ID, :Frequency, :PLL, :V1, :I1,'
-                                 ' :PowerFactor1, :PImport1, :PExport1, :UnitsUsed1, :Units1)',
+                conn.executemany('INSERT INTO EnergyLog(DateTime, V, I)'
+                                 ' VALUES (:DateTime, :V, :I)',
                                  self.databaselist)
             print('Data written to database - DBServ')
         except sqlite3.Error as e:
