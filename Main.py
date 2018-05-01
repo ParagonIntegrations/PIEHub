@@ -43,31 +43,6 @@ class DBServ(multiprocessing.Process):
 
     def run(self):
 
-        # Load values from DB for initial dictionary population
-        conn = sqlite3.connect(self.db_path)
-        try:
-            with conn:
-                conn.execute('SELECT DISTINCT ID FROM EnergyLog')
-                dbids = conn.cursor().fetchall()
-
-                idandunits = {}
-                for meterid in dbids:
-                    conn.execute('SELECT Units1 FROM EnergyLog ORDER BY DateTime DESC LIMIT 1 AND ID=:id', {'id': meterid,})
-                    idandunits = {
-                        meterid :{
-                            'Units1': conn.cursor().fetchone()
-                        }
-                    }
-                    #repeat for units2 and units3
-
-
-                print("Retrieved dbids")
-                self.outputqueue.put(idandunits)
-
-        except sqlite3.Error as e:
-            # print("sqlite3 error when loading database - DBServ")
-            print("An error occurred:", e.args[0])
-
         while True:
 
             # Get updated variables from queue
@@ -83,7 +58,7 @@ class DBServ(multiprocessing.Process):
             if len(self.databaselist) > 6:
                 self.write_to_database()
 
-            time.sleep(2)
+            time.sleep(1)
 
 
 # Class for reading and writing to the serial port
@@ -123,15 +98,6 @@ class SerialComm(multiprocessing.Process):
                 except Exception:
                     print("Exception ignored in decoding json data - SerialComm")
 
-            # Check inputqueue for new information
-            try:
-                while True:
-                    updated_variables = self.inputqueue.get_nowait()
-                    ser.write(updated_variables)
-            except queue.Empty:
-                pass
-
-
 
 # Main Manager class
 class HubManager(multiprocessing.Process):
@@ -141,12 +107,6 @@ class HubManager(multiprocessing.Process):
 
         # Initialize variables
         self.Processdata = {}
-        self.serialdata = {
-            'ID': 0,
-            'Units1': 0,
-        }
-        self.EnergyData = {}
-
 
     def run(self):
 
@@ -165,8 +125,6 @@ class HubManager(multiprocessing.Process):
         DBServ(self.Processdata['DBServ']['inputqueue'], self.Processdata['DBServ']['outputqueue']).start()
         print('DB Server started - PIEHub')
 
-        self.EnergyData = self.Processdata['DBServ']['outputqueue'].get(timeout=10)
-
         # Main Loop
         while True:
 
@@ -174,30 +132,17 @@ class HubManager(multiprocessing.Process):
             try:
                 while True:
                     self.serialdata = self.Processdata['SerialComm']['outputqueue'].get_nowait()
-
-                    # Update Energy variables
-                    UnitID = self.serialdata['ID']
-                    print(UnitID)
-
-                    if UnitID not in self.EnergyData.keys():
-                        self.EnergyData[UnitID] = {
-                            'Units1': self.serialdata['Units1'],
-                        }
-                    else:
-                        self.EnergyData[UnitID]['Units1'] -= self.serialdata['UnitsUsed1']
-                        # Check if Units match
-
                     # Send data to Database
                     self.Processdata['DBServ']['inputqueue'].put(self.serialdata)
                     print("Data sent to DB - Hub Manager")
             except queue.Empty:
-                pass
+                time.sleep(1)
 
             # Send updated information to PIEmon every 60 mins
 
 
 
-            time.sleep(1)
+
 
 if __name__ == "__main__":
     print("Waiting 30 seconds before starting")
