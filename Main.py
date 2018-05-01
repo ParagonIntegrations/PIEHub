@@ -50,12 +50,12 @@ class DBServ(multiprocessing.Process):
                 while True:
                     updated_variables = self.inputqueue.get_nowait()
                     self.databaselist.append(updated_variables)
-                    print("Data received - WriteTODatabase")
+                    #print("Data received - WriteTODatabase")
             except queue.Empty:
                 pass
 
             # Check length of list to write
-            if len(self.databaselist) > 6:
+            if len(self.databaselist) >= 50:
                 self.write_to_database()
 
             time.sleep(1)
@@ -134,7 +134,7 @@ class HubManager(multiprocessing.Process):
                     self.serialdata = self.Processdata['SerialComm']['outputqueue'].get_nowait()
                     # Send data to Database
                     self.Processdata['DBServ']['inputqueue'].put(self.serialdata)
-                    print("Data sent to DB - Hub Manager")
+                    #print("Data sent to DB - Hub Manager")
             except queue.Empty:
                 time.sleep(1)
 
