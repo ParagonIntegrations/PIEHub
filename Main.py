@@ -80,6 +80,14 @@ class SerialComm(multiprocessing.Process):
         ser.close()
         ser.open()
 
+        #Initialize default dictionary
+        defaults = {
+            'DateTime': 'Default Timestamp',
+            'V': 0,
+            'I': 0
+        }
+
+        safedict = {}
 
         while True:
 
@@ -94,7 +102,9 @@ class SerialComm(multiprocessing.Process):
                     #print('Json')
                     #print("")
                     #print (json.dumps(decodeddict, indent=1, sort_keys=True))
-                    self.outputqueue.put(decodeddict)
+                    for k in defaults:
+                        safedict[k] = decodeddict.get(k, defaults[k])
+                    self.outputqueue.put(safedict)
                 except Exception:
                     print("Exception ignored in decoding json data - SerialComm")
 
