@@ -92,7 +92,7 @@ class SerialComm(multiprocessing.Process):
         while True:
 
             self.data = ser.readline().strip()
-            #print(self.data)
+            print(self.data)
             decodeddata = self.data.decode()
 
             if decodeddata != "":
@@ -101,7 +101,7 @@ class SerialComm(multiprocessing.Process):
                     decodeddict['DateTime'] = datetime.datetime.now().isoformat(timespec='milliseconds')
                     #print('Json')
                     #print("")
-                    print (json.dumps(decodeddict, indent=1, sort_keys=True))
+                    #print (json.dumps(decodeddict, indent=1, sort_keys=True))
                     for k in defaults:
                         safedict[k] = decodeddict.get(k, defaults[k])
                     self.outputqueue.put(safedict)
