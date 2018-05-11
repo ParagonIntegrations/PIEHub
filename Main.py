@@ -96,14 +96,19 @@ class SerialComm(multiprocessing.Process):
             print(decodeddata)
             if decodeddata != "":
                 try:
+                    print('1')
                     decodeddict = json.loads(decodeddata)
+                    print('2')
                     decodeddict['DateTime'] = datetime.datetime.now().isoformat(timespec='milliseconds')
+                    print('3')
                     #print('Json')
                     #print("")
                     #print (json.dumps(decodeddict, indent=1, sort_keys=True))
                     for k in defaults:
                         safedict[k] = decodeddict.get(k, defaults[k])
+                    print('4')
                     self.outputqueue.put(safedict)
+                    print('5')
                 except Exception:
                     print("Exception ignored in decoding json data - SerialComm")
 
