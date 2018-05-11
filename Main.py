@@ -92,9 +92,8 @@ class SerialComm(multiprocessing.Process):
         while True:
 
             self.data = ser.readline().strip()
-            print(self.data)
             decodeddata = self.data.decode()
-
+            print(decodeddata)
             if decodeddata != "":
                 try:
                     decodeddict = json.loads(decodeddata)
