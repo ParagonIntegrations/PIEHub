@@ -90,7 +90,7 @@ class SerialComm(multiprocessing.Process):
             if decodeddata != "":
                 try:
                     decodeddict = json.loads(decodeddata)
-                    decodeddict['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    decodeddict['DateTime'] = datetime.datetime.now().isoformat(timespec='milliseconds')
                     #print('Json')
                     #print("")
                     #print (json.dumps(decodeddict, indent=1, sort_keys=True))
@@ -136,10 +136,11 @@ class HubManager(multiprocessing.Process):
                     self.Processdata['DBServ']['inputqueue'].put(self.serialdata)
                     #print("Data sent to DB - Hub Manager")
             except queue.Empty:
-                time.sleep(1)
+                pass
 
             # Send updated information to PIEmon every 60 mins
 
+            time.sleep(1)
 
 
 
