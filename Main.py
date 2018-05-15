@@ -111,6 +111,7 @@ class SerialComm(multiprocessing.Process):
                     #print('5')
                 except Exception:
                     print("Exception ignored in decoding json data - SerialComm")
+                    print(decodeddata)
 
 
 # Main Manager class
