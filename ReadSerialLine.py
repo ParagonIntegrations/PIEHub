@@ -10,7 +10,7 @@ class ReadLine:
             self.buf = self.buf[i + 1:]
             return r
         while True:
-            i = max(1, min(2048, self.s.in_waiting))
+            i = max(1, min(2048, self.s.inWaiting()))
             data = self.s.read(i)
             i = data.find(b"\n")
             if i >= 0:
