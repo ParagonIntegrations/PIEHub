@@ -8,6 +8,7 @@ import sqlite3
 import serial
 import json
 import os
+from ReadSerialLine import ReadLine
 
 
 # Class for writing to Database
@@ -91,7 +92,8 @@ class SerialComm(multiprocessing.Process):
 
         while True:
 
-            self.data = ser.readline().strip()
+            self.data = ReadLine.readline(ser).strip()
+            #self.data = ser.readline().strip()
             decodeddata = self.data.decode()
             #print(decodeddata)
             if decodeddata != "":
