@@ -92,7 +92,7 @@ class SerialComm(multiprocessing.Process):
 
         while True:
 
-            self.data = ReadLine(ser).readline.strip()
+            self.data = ReadLine(ser).readline().strip()
             #self.data = ser.readline().strip()
             decodeddata = self.data.decode()
             #print(decodeddata)
