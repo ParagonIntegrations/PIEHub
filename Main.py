@@ -29,12 +29,12 @@ class DBServ(multiprocessing.Process):
         self.db_path = os.path.join(base_dir, "PIEHub.db")
 
     def write_to_database(self):
-        print(self.databaselist)
+        #print(self.databaselist)
         conn = sqlite3.connect(self.db_path)
         try:
             with conn:
-                conn.executemany('INSERT INTO EnergyLog(DateTime, V, I)'
-                                 ' VALUES (:DateTime, :V, :I)',
+                conn.executemany('INSERT INTO EnergyLog(DateTime, Vrms, Irms, RealPower, Export, PowerFactor, PLL, Units, Frequency)'
+                                 ' VALUES (:DateTime, :Vrms, :Irms, :RealPower, :Export, :PowerFactor, :PLL, :Units, :Frequency)',
                                  self.databaselist)
             print('Data written to database - DBServ')
         except sqlite3.Error as e:
@@ -84,8 +84,14 @@ class SerialComm(multiprocessing.Process):
         #Initialize default dictionary
         defaults = {
             'DateTime': 'Default Timestamp',
-            'V': 0,
-            'I': 0
+            'Vrms': 'Default',
+            'Irms': 'Default',
+            'RealPower': 'Default',
+            'Export': 'Default',
+            'PowerFactor': 'Default',
+            'PLL': 'Default',
+            'Units': 'Default',
+            'Frequency': 'Default'
         }
 
         safedict = {}

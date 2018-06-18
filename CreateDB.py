@@ -5,7 +5,7 @@ conn = sqlite3.connect('PIEHub.db')
 c = conn.cursor()
 
 # Create table
-c.execute('''CREATE TABLE EnergyLog(DateTime, V, I)''')
+c.execute('''CREATE TABLE EnergyLog(DateTime, Vrms, Irms, RealPower, Export, PowerFactor, PLL, Units, Frequency)''')
 
 # Save (commit) the changes
 conn.commit()
